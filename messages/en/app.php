@@ -2,8 +2,8 @@
 
 return [
     /* Текст на главной странице */
-    'WELCOME_TO_STL_CLIENT' => 'Welcome to STL Client!',
-    'STL_CLIENT_DESCRIPTION' => ' is a web-based application (test client) designed to testing main functions of ',
+    'WELCOME_TO_TABBYLD2_CLIENT' => 'Welcome to STL Client!',
+    'TABBYLD2_CLIENT_DESCRIPTION' => ' is a web-based application (test client) designed to testing main functions of ',
 
     /* Пункты главного меню */
     'NAV_SIGN_IN' => 'Sign in',
