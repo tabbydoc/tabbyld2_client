@@ -4,8 +4,8 @@ $params = require __DIR__ . '/params.php';
 $db = require __DIR__ . '/db.php';
 
 $config = [
-    'id' => 'stl-client',
-    'name' => 'STL Client',
+    'id' => 'tabbyld2-client',
+    'name' => 'TabbyLD2 Client',
     'defaultRoute' => 'site/index',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
