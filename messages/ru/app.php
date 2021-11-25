@@ -69,7 +69,7 @@ return [
     /* Сообщения на странице аннотирования таблицы */
     'ANNOTATE_TABLE_MESSAGE_SUCCESSFULLY_LOADED_AND_CONVERTED' => 'Файл таблицы успешно загружен, преобразован в json и очищен!',
     'ANNOTATE_TABLE_MESSAGE_SUCCESSFULLY_LOADED' => 'Файл таблицы успешно загружен и очищен!',
-    'ANNOTATE_TABLE_MESSAGE_STL_ERROR' => 'Ошибка! Сервис STL недоступен.',
+    'ANNOTATE_TABLE_MESSAGE_TABBYLD2_ERROR' => 'Ошибка! Сервис TabbyLD2 недоступен.',
     /* Модальные окна на странице аннотирования таблицы */
     'ANNOTATE_TABLE_MODAL_FORM_SELECT_SUBJECT_COLUMN' => 'Выбор сущностного (тематического) столбца',
     'ANNOTATE_TABLE_MODAL_FORM_SELECT_REFERENCE_CLASS' => 'Выбор референтного класса',

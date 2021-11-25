@@ -69,7 +69,7 @@ return [
     /* Сообщения на странице аннотирования таблицы */
     'ANNOTATE_TABLE_MESSAGE_SUCCESSFULLY_LOADED_AND_CONVERTED' => 'Table file loaded, converted to json and cleaned successfully!',
     'ANNOTATE_TABLE_MESSAGE_SUCCESSFULLY_LOADED' => 'Table file has been loaded and cleared successfully!',
-    'ANNOTATE_TABLE_MESSAGE_STL_ERROR' => 'Error! STL service is not available.',
+    'ANNOTATE_TABLE_MESSAGE_TABBYLD2_ERROR' => 'Error! TabbyLD2 service is not available.',
     /* Модальные окна на странице аннотирования таблицы */
     'ANNOTATE_TABLE_MODAL_FORM_SELECT_SUBJECT_COLUMN' => 'Select subject column',
     'ANNOTATE_TABLE_MODAL_FORM_SELECT_REFERENCE_CLASS' => 'Select reference class',
