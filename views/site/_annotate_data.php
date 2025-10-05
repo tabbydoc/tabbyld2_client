@@ -74,6 +74,14 @@ $dataProvider = new ArrayDataProvider([
                 ]
             ]); ?>
             <?= Button::widget([
+                'label' => Yii::t('app', 'BUTTON_ANNOTATE_CELLS'),
+                'options' => [
+                    'id' => 'annotate-cells-button',
+                    'class' => 'btn btn-primary',
+                    'disabled' => 'disabled'
+                ]
+            ]); ?>
+            <?= Button::widget([
                 'label' => Yii::t('app', 'BUTTON_ANNOTATE_LITERAL_COLUMNS'),
                 'options' => [
                     'id' => 'annotate-literal-column-button',

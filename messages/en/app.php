@@ -24,6 +24,7 @@ return [
     'BUTTON_SELECT' => 'Select',
     'BUTTON_CANCEL' => 'Cancel',
     'BUTTON_IDENTIFY_SUBJECT_COLUMN' => 'Identify subject column',
+    'BUTTON_ANNOTATE_CELLS' => 'Annotate cells',
     'BUTTON_ANNOTATE_LITERAL_COLUMNS' => 'Annotate literal columns',
     'BUTTON_AUGMENT_KNOWLEDGE_BASE' => 'Augment knowledge base',
 

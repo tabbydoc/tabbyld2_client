@@ -24,6 +24,7 @@ return [
     'BUTTON_SELECT' => 'Выбрать',
     'BUTTON_CANCEL' => 'Отмена',
     'BUTTON_IDENTIFY_SUBJECT_COLUMN' => 'Задать сущностный столбец',
+    'BUTTON_ANNOTATE_CELLS' => 'Аннотировать ячейки',
     'BUTTON_ANNOTATE_LITERAL_COLUMNS' => 'Аннотировать литеральные столбцы',
     'BUTTON_AUGMENT_KNOWLEDGE_BASE' => 'Пополнить базу знаний',
 
