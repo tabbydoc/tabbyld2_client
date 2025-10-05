@@ -2,8 +2,8 @@
 
 return [
     /* Текст на главной странице */
-    'WELCOME_TO_STL_CLIENT' => 'Добро пожаловать в STL Client!',
-    'STL_CLIENT_DESCRIPTION' => ' - это веб-ориентированное приложение (тестовый клиент), предназначенное для тестирования основных функций программы ',
+    'WELCOME_TO_TABBYLD2_CLIENT' => 'Добро пожаловать в TabbyLD2 Client!',
+    'TABBYLD2_CLIENT_DESCRIPTION' => ' - это веб-ориентированное приложение (тестовый клиент), предназначенное для тестирования основных функций программы ',
 
     /* Пункты главного меню */
     'NAV_SIGN_IN' => 'Вход',
@@ -24,6 +24,7 @@ return [
     'BUTTON_SELECT' => 'Выбрать',
     'BUTTON_CANCEL' => 'Отмена',
     'BUTTON_IDENTIFY_SUBJECT_COLUMN' => 'Задать сущностный столбец',
+    'BUTTON_ANNOTATE_CELLS' => 'Аннотировать ячейки',
     'BUTTON_ANNOTATE_LITERAL_COLUMNS' => 'Аннотировать литеральные столбцы',
     'BUTTON_AUGMENT_KNOWLEDGE_BASE' => 'Пополнить базу знаний',
 
@@ -69,7 +70,7 @@ return [
     /* Сообщения на странице аннотирования таблицы */
     'ANNOTATE_TABLE_MESSAGE_SUCCESSFULLY_LOADED_AND_CONVERTED' => 'Файл таблицы успешно загружен, преобразован в json и очищен!',
     'ANNOTATE_TABLE_MESSAGE_SUCCESSFULLY_LOADED' => 'Файл таблицы успешно загружен и очищен!',
-    'ANNOTATE_TABLE_MESSAGE_STL_ERROR' => 'Ошибка! Сервис STL недоступен.',
+    'ANNOTATE_TABLE_MESSAGE_TABBYLD2_ERROR' => 'Ошибка! Сервис TabbyLD2 недоступен.',
     /* Модальные окна на странице аннотирования таблицы */
     'ANNOTATE_TABLE_MODAL_FORM_SELECT_SUBJECT_COLUMN' => 'Выбор сущностного (тематического) столбца',
     'ANNOTATE_TABLE_MODAL_FORM_SELECT_REFERENCE_CLASS' => 'Выбор референтного класса',

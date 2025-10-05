@@ -2,8 +2,8 @@
 
 return [
     /* Текст на главной странице */
-    'WELCOME_TO_STL_CLIENT' => 'Welcome to STL Client!',
-    'STL_CLIENT_DESCRIPTION' => ' is a web-based application (test client) designed to testing main functions of ',
+    'WELCOME_TO_TABBYLD2_CLIENT' => 'Welcome to STL Client!',
+    'TABBYLD2_CLIENT_DESCRIPTION' => ' is a web-based application (test client) designed to testing main functions of ',
 
     /* Пункты главного меню */
     'NAV_SIGN_IN' => 'Sign in',
@@ -24,6 +24,7 @@ return [
     'BUTTON_SELECT' => 'Select',
     'BUTTON_CANCEL' => 'Cancel',
     'BUTTON_IDENTIFY_SUBJECT_COLUMN' => 'Identify subject column',
+    'BUTTON_ANNOTATE_CELLS' => 'Annotate cells',
     'BUTTON_ANNOTATE_LITERAL_COLUMNS' => 'Annotate literal columns',
     'BUTTON_AUGMENT_KNOWLEDGE_BASE' => 'Augment knowledge base',
 
@@ -69,7 +70,7 @@ return [
     /* Сообщения на странице аннотирования таблицы */
     'ANNOTATE_TABLE_MESSAGE_SUCCESSFULLY_LOADED_AND_CONVERTED' => 'Table file loaded, converted to json and cleaned successfully!',
     'ANNOTATE_TABLE_MESSAGE_SUCCESSFULLY_LOADED' => 'Table file has been loaded and cleared successfully!',
-    'ANNOTATE_TABLE_MESSAGE_STL_ERROR' => 'Error! STL service is not available.',
+    'ANNOTATE_TABLE_MESSAGE_TABBYLD2_ERROR' => 'Error! TabbyLD2 service is not available.',
     /* Модальные окна на странице аннотирования таблицы */
     'ANNOTATE_TABLE_MODAL_FORM_SELECT_SUBJECT_COLUMN' => 'Select subject column',
     'ANNOTATE_TABLE_MODAL_FORM_SELECT_REFERENCE_CLASS' => 'Select reference class',

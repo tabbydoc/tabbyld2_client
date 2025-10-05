@@ -132,7 +132,7 @@ class SiteController extends Controller
                 );
                 // Отправка POST-запроса на STL
                 $curl = curl_init();
-                curl_setopt($curl, CURLOPT_URL, Yii::$app->params['url'] . '/stl/upload-csv-file');
+                curl_setopt($curl, CURLOPT_URL, Yii::$app->params['url'] . '/tabbyld2/upload-csv-file');
                 curl_setopt($curl, CURLOPT_POST, 1);
                 curl_setopt($curl, CURLOPT_POSTFIELDS, $upload_request);
                 curl_setopt($curl, CURLOPT_HEADER, false);
@@ -167,7 +167,7 @@ class SiteController extends Controller
                 } else {
                     // Вывод сообщения об ошибке загрузке файла таблицы
                     Yii::$app->getSession()->setFlash('error',
-                        Yii::t('app', 'ANNOTATE_TABLE_MESSAGE_STL_ERROR'));
+                        Yii::t('app', 'ANNOTATE_TABLE_MESSAGE_TABBYLD2_ERROR'));
 
                     return $this->refresh();
                 }
@@ -206,7 +206,7 @@ class SiteController extends Controller
                 );
                 // Отправка POST-запроса на STL
                 $curl = curl_init();
-                curl_setopt($curl, CURLOPT_URL, Yii::$app->params['url'] . '/stl/upload-json-file');
+                curl_setopt($curl, CURLOPT_URL, Yii::$app->params['url'] . '/tabbyld2/upload-json-file');
                 curl_setopt($curl, CURLOPT_POST, 1);
                 curl_setopt($curl, CURLOPT_POSTFIELDS, $upload_request);
                 curl_setopt($curl, CURLOPT_HEADER, false);
@@ -240,7 +240,7 @@ class SiteController extends Controller
                 } else {
                     // Вывод сообщения об ошибке загрузке файла таблицы
                     Yii::$app->getSession()->setFlash('error',
-                        Yii::t('app', 'ANNOTATE_TABLE_MESSAGE_STL_ERROR'));
+                        Yii::t('app', 'ANNOTATE_TABLE_MESSAGE_TABBYLD2_ERROR'));
 
                     return $this->refresh();
                 }
@@ -291,7 +291,7 @@ class SiteController extends Controller
                 ));
                 // Отправка POST-запроса на STL
                 $curl = curl_init();
-                curl_setopt($curl, CURLOPT_URL, Yii::$app->params['url'] . '/stl/classify-column');
+                curl_setopt($curl, CURLOPT_URL, Yii::$app->params['url'] . '/tabbyld2/classify-column');
                 curl_setopt($curl, CURLOPT_POST, 1);
                 curl_setopt($curl, CURLOPT_POSTFIELDS, $request);
                 curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
@@ -322,411 +322,375 @@ class SiteController extends Controller
         return false;
     }
 
-    /**
-     * Генерация классов кандидатов для заголовка столбца при помощи сервиса STL.
-     *
-     * @return false|\yii\console\Response|Response
-     */
-    public function actionGenerateCandidateClasses()
-    {
-        // Установка времени выполнения скрипта в 1 час.
-        set_time_limit(60 * 60);
-        // Ajax-запрос
-        if (Yii::$app->request->isAjax) {
-            // Определение массива возвращаемых данных
-            $data = array();
-            // Установка формата JSON для возвращаемых данных
-            $response = Yii::$app->response;
-            $response->format = Response::FORMAT_JSON;
-            // Если POST-запрос
-            if (Yii::$app->request->isPost) {
-                // Формирование json-запроса
-                $column_name = Yii::$app->request->post('column_name');
-                $file_name = Yii::$app->request->post('file_name');
-                $request = json_encode(array(
-                    'column_name' => $column_name,
-                    'file_name' => $file_name
-                ));
-                // Отправка POST-запроса на STL
-                $curl = curl_init();
-                curl_setopt($curl, CURLOPT_URL, Yii::$app->params['url'] . '/stl/get-candidate-classes');
-                curl_setopt($curl, CURLOPT_POST, 1);
-                curl_setopt($curl, CURLOPT_POSTFIELDS, $request);
-                curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
-                curl_setopt($curl, CURLOPT_RETURNTRANSFER, true );
-                $json_data = curl_exec($curl);
-                curl_close($curl);
-                // Декодирование полученных данных из формата JSON
-                $candidate_classes = json_decode($json_data, true);
-                // Если есть даные
-                if ($candidate_classes)
-                    $data['candidate_classes'] = $candidate_classes;
-                else
-                    $data['candidate_classes'] = null;
-            }
-            // Возвращение данных
-            $response->data = $data;
-
-            return $response;
-        }
-
-        return false;
-    }
-
-    /**
-     * Выбор наиболее подходящего (референтного) класса из набора кандидатов для столбца при помощи сервиса STL.
-     *
-     * @return false|\yii\console\Response|Response
-     */
-    public function actionSelectReferenceClass()
-    {
-        // Установка времени выполнения скрипта в 1 час.
-        set_time_limit(60 * 60);
-        // Ajax-запрос
-        if (Yii::$app->request->isAjax) {
-            // Определение массива возвращаемых данных
-            $data = array();
-            // Установка формата JSON для возвращаемых данных
-            $response = Yii::$app->response;
-            $response->format = Response::FORMAT_JSON;
-            // Если POST-запрос
-            if (Yii::$app->request->isPost) {
-                // Формирование json-запроса
-                $column_name = Yii::$app->request->post('column_name');
-                $class_name = Yii::$app->request->post('class_name');
-                $file_name = Yii::$app->request->post('file_name');
-                $request = json_encode(array(
-                    'column_name' => $column_name,
-                    'candidate_classes' => array(),
-                    'class_name' => $class_name,
-                    'file_name' => $file_name
-                ));
-                // Отправка POST-запроса на STL
-                $curl = curl_init();
-                curl_setopt($curl, CURLOPT_URL, Yii::$app->params['url'] . '/stl/get-reference-class');
-                curl_setopt($curl, CURLOPT_POST, 1);
-                curl_setopt($curl, CURLOPT_POSTFIELDS, $request);
-                curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
-                curl_setopt($curl, CURLOPT_RETURNTRANSFER, true );
-                $json_data = curl_exec($curl);
-                curl_close($curl);
-                // Декодирование полученных данных из формата JSON
-                $reference_class = json_decode($json_data, true);
-                // Если есть даные
-                if ($reference_class)
-                    $data['reference_class'] = $reference_class;
-                else
-                    $data['reference_class'] = null;
-            }
-            // Возвращение данных
-            $response->data = $data;
-
-            return $response;
-        }
-
-        return false;
-    }
-
-    /**
-     * Аннотирование типами данных литеральных столбцов таблицы.
-     *
-     * @return false|\yii\console\Response|Response
-     */
-    public function actionAnnotateLiteralColumns()
-    {
-        // Установка времени выполнения скрипта в 1 час.
-        set_time_limit(60 * 60);
-        // Ajax-запрос
-        if (Yii::$app->request->isAjax) {
-            // Определение массива возвращаемых данных
-            $data = array();
-            // Установка формата JSON для возвращаемых данных
-            $response = Yii::$app->response;
-            $response->format = Response::FORMAT_JSON;
-            // Если POST-запрос
-            if (Yii::$app->request->isPost) {
-                // Формирование json-запроса
-                $recognized_data = json_decode(Yii::$app->request->post('recognized_data'), true);
-                $file_name = Yii::$app->request->post('file_name');
-                $request = json_encode(array(
-                    'recognized_data' => $recognized_data,
-                    'file_name' => $file_name
-                ));
-                // Отправка POST-запроса на STL
-                $curl = curl_init();
-                curl_setopt($curl, CURLOPT_URL, Yii::$app->params['url'] . '/stl/get-reference-datatype');
-                curl_setopt($curl, CURLOPT_POST, 1);
-                curl_setopt($curl, CURLOPT_POSTFIELDS, $request);
-                curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
-                curl_setopt($curl, CURLOPT_RETURNTRANSFER, true );
-                $json_data = curl_exec($curl);
-                curl_close($curl);
-                // Декодирование полученных данных из формата JSON
-                $reference_datatype = json_decode($json_data, true);
-                // Если есть даные
-                if ($reference_datatype)
-                    $data['reference_datatype'] = $reference_datatype;
-                else
-                    $data['reference_datatype'] = null;
-            }
-            // Возвращение данных
-            $response->data = $data;
-
-            return $response;
-        }
-
-        return false;
-    }
-
-    /**
-     * Генерация сущностей кандидатов для значения ячейки при помощи сервиса STL.
-     *
-     * @return false|\yii\console\Response|Response
-     */
-    public function actionGenerateCandidateEntities()
-    {
-        // Установка времени выполнения скрипта в 1 час.
-        set_time_limit(60 * 60);
-        // Ajax-запрос
-        if (Yii::$app->request->isAjax) {
-            // Определение массива возвращаемых данных
-            $data = array();
-            // Установка формата JSON для возвращаемых данных
-            $response = Yii::$app->response;
-            $response->format = Response::FORMAT_JSON;
-            // Если POST-запрос
-            if (Yii::$app->request->isPost) {
-                // Формирование json-запроса
-                $cell_value = Yii::$app->request->post('cell_value');
-                $file_name = Yii::$app->request->post('file_name');
-                $request = json_encode(array(
-                    'cell_value' => $cell_value,
-                    'file_name' => $file_name
-                ));
-                // Отправка POST-запроса на STL
-                $curl = curl_init();
-                curl_setopt($curl, CURLOPT_URL, Yii::$app->params['url'] . '/stl/get-candidate-entities');
-                curl_setopt($curl, CURLOPT_POST, 1);
-                curl_setopt($curl, CURLOPT_POSTFIELDS, $request);
-                curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
-                curl_setopt($curl, CURLOPT_RETURNTRANSFER, true );
-                $json_data = curl_exec($curl);
-                curl_close($curl);
-                // Декодирование полученных данных из формата JSON
-                $candidate_entities = json_decode($json_data, true);
-                // Если есть даные
-                if ($candidate_entities)
-                    $data['candidate_entities'] = $candidate_entities;
-                else
-                    $data['candidate_entities'] = null;
-            }
-            // Возвращение данных
-            $response->data = $data;
-
-            return $response;
-        }
-
-        return false;
-    }
-
-    /**
-     * Выбор наиболее подходящей (референтной) сущности из набора кандидатов для значения ячейки при помощи сервиса STL.
-     *
-     * @return false|\yii\console\Response|Response
-     */
-    public function actionSelectReferenceEntity()
-    {
-        // Установка времени выполнения скрипта в 1 час.
-        set_time_limit(60 * 60);
-        // Ajax-запрос
-        if (Yii::$app->request->isAjax) {
-            // Определение массива возвращаемых данных
-            $data = array();
-            // Установка формата JSON для возвращаемых данных
-            $response = Yii::$app->response;
-            $response->format = Response::FORMAT_JSON;
-            // Если POST-запрос
-            if (Yii::$app->request->isPost) {
-                // Формирование json-запроса
-                $cell_value = Yii::$app->request->post('cell_value');
-                $entity_name = Yii::$app->request->post('entity_name');
-                $file_name = Yii::$app->request->post('file_name');
-                $request = json_encode(array(
-                    'cell_value' => $cell_value,
-                    'candidate_entities' => array(),
-                    'entity_name' => $entity_name,
-                    'file_name' => $file_name
-                ));
-                // Отправка POST-запроса на STL
-                $curl = curl_init();
-                curl_setopt($curl, CURLOPT_URL, Yii::$app->params['url'] . '/stl/get-reference-entity');
-                curl_setopt($curl, CURLOPT_POST, 1);
-                curl_setopt($curl, CURLOPT_POSTFIELDS, $request);
-                curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
-                curl_setopt($curl, CURLOPT_RETURNTRANSFER, true );
-                $json_data = curl_exec($curl);
-                curl_close($curl);
-                // Декодирование полученных данных из формата JSON
-                $reference_entity = json_decode($json_data, true);
-                // Если есть даные
-                if ($reference_entity)
-                    $data['reference_entity'] = $reference_entity;
-                else
-                    $data['reference_entity'] = null;
-            }
-            // Возвращение данных
-            $response->data = $data;
-
-            return $response;
-        }
-
-        return false;
-    }
-
-    /**
-     * Генерация свойств кандидатов для пары столбцов при помощи сервиса STL.
-     *
-     * @return false|\yii\console\Response|Response
-     */
-    public function actionGenerateCandidateProperties()
-    {
-        // Установка времени выполнения скрипта в 1 час.
-        set_time_limit(60 * 60);
-        // Ajax-запрос
-        if (Yii::$app->request->isAjax) {
-            // Определение массива возвращаемых данных
-            $data = array();
-            // Установка формата JSON для возвращаемых данных
-            $response = Yii::$app->response;
-            $response->format = Response::FORMAT_JSON;
-            // Если POST-запрос
-            if (Yii::$app->request->isPost) {
-                // Формирование json-запроса
-                $column_name = Yii::$app->request->post('column_name');
-                $file_name = Yii::$app->request->post('file_name');
-                $request = json_encode(array(
-                    'column_name' => $column_name,
-                    'file_name' => $file_name
-                ));
-                // Отправка POST-запроса на STL
-                $curl = curl_init();
-                curl_setopt($curl, CURLOPT_URL, Yii::$app->params['url'] . '/stl/get-candidate-properties');
-                curl_setopt($curl, CURLOPT_POST, 1);
-                curl_setopt($curl, CURLOPT_POSTFIELDS, $request);
-                curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
-                curl_setopt($curl, CURLOPT_RETURNTRANSFER, true );
-                $json_data = curl_exec($curl);
-                curl_close($curl);
-                // Декодирование полученных данных из формата JSON
-                $candidate_properties = json_decode($json_data, true);
-                // Если есть даные
-                if ($candidate_properties)
-                    $data['candidate_properties'] = $candidate_properties;
-                else
-                    $data['candidate_properties'] = null;
-            }
-            // Возвращение данных
-            $response->data = $data;
-
-            return $response;
-        }
-
-        return false;
-    }
-
-    /**
-     * Выбор наиболее подходящего (референтного) свойства из набора кандидатов для пары столбцов при помощи сервиса STL.
-     *
-     * @return false|\yii\console\Response|Response
-     */
-    public function actionSelectReferenceProperty()
-    {
-        // Установка времени выполнения скрипта в 1 час.
-        set_time_limit(60 * 60);
-        // Ajax-запрос
-        if (Yii::$app->request->isAjax) {
-            // Определение массива возвращаемых данных
-            $data = array();
-            // Установка формата JSON для возвращаемых данных
-            $response = Yii::$app->response;
-            $response->format = Response::FORMAT_JSON;
-            // Если POST-запрос
-            if (Yii::$app->request->isPost) {
-                // Формирование json-запроса
-                $column_name = Yii::$app->request->post('column_name');
-                $property_name = Yii::$app->request->post('property_name');
-                $file_name = Yii::$app->request->post('file_name');
-                $request = json_encode(array(
-                    'column_name' => $column_name,
-                    'candidate_properties' => array(),
-                    'property_name' => $property_name,
-                    'file_name' => $file_name
-                ));
-                // Отправка POST-запроса на STL
-                $curl = curl_init();
-                curl_setopt($curl, CURLOPT_URL, Yii::$app->params['url'] . '/stl/get-reference-property');
-                curl_setopt($curl, CURLOPT_POST, 1);
-                curl_setopt($curl, CURLOPT_POSTFIELDS, $request);
-                curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
-                curl_setopt($curl, CURLOPT_RETURNTRANSFER, true );
-                $json_data = curl_exec($curl);
-                curl_close($curl);
-                // Декодирование полученных данных из формата JSON
-                $reference_property = json_decode($json_data, true);
-                // Если есть даные
-                if ($reference_property)
-                    $data['reference_property'] = $reference_property;
-                else
-                    $data['reference_property'] = null;
-            }
-            // Возвращение данных
-            $response->data = $data;
-
-            return $response;
-        }
-
-        return false;
-    }
-
-    /**
-     * Пополнить базу знаний платформы TALISMAN конкретными сущностями из таблицы.
-     *
-     * @return false|\yii\console\Response|Response
-     */
-    public function actionAugmentKnowledgeBase()
-    {
-        // Установка времени выполнения скрипта в 1 час.
-        set_time_limit(60 * 60);
-        // Ajax-запрос
-        if (Yii::$app->request->isAjax) {
-            // Определение массива возвращаемых данных
-            $data = array();
-            // Установка формата JSON для возвращаемых данных
-            $response = Yii::$app->response;
-            $response->format = Response::FORMAT_JSON;
-            // Если POST-запрос
-            if (Yii::$app->request->isPost) {
-                // Формирование json-запроса
-                $file_name = Yii::$app->request->post('file_name');
-                $request = json_encode(array(
-                    'file_name' => $file_name
-                ));
-                // Отправка POST-запроса на STL
-                $curl = curl_init();
-                curl_setopt($curl, CURLOPT_URL, Yii::$app->params['url'] . '/stl/augment-knowledge-base');
-                curl_setopt($curl, CURLOPT_POST, 1);
-                curl_setopt($curl, CURLOPT_POSTFIELDS, $request);
-                curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
-                curl_setopt($curl, CURLOPT_RETURNTRANSFER, true );
-                curl_exec($curl);
-                curl_close($curl);
-            }
-            // Возвращение данных
-            $response->data = $data;
-
-            return $response;
-        }
-
-        return false;
-    }
+//    /**
+//     * Генерация сущностей кандидатов для значения ячейки при помощи сервиса STL.
+//     *
+//     * @return false|\yii\console\Response|Response
+//     */
+//    public function actionGenerateCandidateEntities()
+//    {
+//        // Установка времени выполнения скрипта в 1 час.
+//        set_time_limit(60 * 60);
+//        // Ajax-запрос
+//        if (Yii::$app->request->isAjax) {
+//            // Определение массива возвращаемых данных
+//            $data = array();
+//            // Установка формата JSON для возвращаемых данных
+//            $response = Yii::$app->response;
+//            $response->format = Response::FORMAT_JSON;
+//            // Если POST-запрос
+//            if (Yii::$app->request->isPost) {
+//                // Формирование json-запроса
+//                $cell_value = Yii::$app->request->post('cell_value');
+//                $file_name = Yii::$app->request->post('file_name');
+//                $request = json_encode(array(
+//                    'cell_value' => $cell_value,
+//                    'file_name' => $file_name
+//                ));
+//                // Отправка POST-запроса на STL
+//                $curl = curl_init();
+//                curl_setopt($curl, CURLOPT_URL, Yii::$app->params['url'] .
+//                    '/tabbyld2/get-candidate-entities');
+//                curl_setopt($curl, CURLOPT_POST, 1);
+//                curl_setopt($curl, CURLOPT_POSTFIELDS, $request);
+//                curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
+//                curl_setopt($curl, CURLOPT_RETURNTRANSFER, true );
+//                $json_data = curl_exec($curl);
+//                curl_close($curl);
+//                // Декодирование полученных данных из формата JSON
+//                $candidate_entities = json_decode($json_data, true);
+//                // Если есть даные
+//                if ($candidate_entities)
+//                    $data['candidate_entities'] = $candidate_entities;
+//                else
+//                    $data['candidate_entities'] = null;
+//            }
+//            // Возвращение данных
+//            $response->data = $data;
+//
+//            return $response;
+//        }
+//
+//        return false;
+//    }
+//
+//    /**
+//     * Выбор наиболее подходящей (референтной) сущности из набора кандидатов для значения ячейки при помощи сервиса STL.
+//     *
+//     * @return false|\yii\console\Response|Response
+//     */
+//    public function actionSelectReferenceEntity()
+//    {
+//        // Установка времени выполнения скрипта в 1 час.
+//        set_time_limit(60 * 60);
+//        // Ajax-запрос
+//        if (Yii::$app->request->isAjax) {
+//            // Определение массива возвращаемых данных
+//            $data = array();
+//            // Установка формата JSON для возвращаемых данных
+//            $response = Yii::$app->response;
+//            $response->format = Response::FORMAT_JSON;
+//            // Если POST-запрос
+//            if (Yii::$app->request->isPost) {
+//                // Формирование json-запроса
+//                $cell_value = Yii::$app->request->post('cell_value');
+//                $entity_name = Yii::$app->request->post('entity_name');
+//                $file_name = Yii::$app->request->post('file_name');
+//                $request = json_encode(array(
+//                    'cell_value' => $cell_value,
+//                    'candidate_entities' => array(),
+//                    'entity_name' => $entity_name,
+//                    'file_name' => $file_name
+//                ));
+//                // Отправка POST-запроса на STL
+//                $curl = curl_init();
+//                curl_setopt($curl, CURLOPT_URL, Yii::$app->params['url'] .
+//                    '/tabbyld2/get-reference-entity');
+//                curl_setopt($curl, CURLOPT_POST, 1);
+//                curl_setopt($curl, CURLOPT_POSTFIELDS, $request);
+//                curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
+//                curl_setopt($curl, CURLOPT_RETURNTRANSFER, true );
+//                $json_data = curl_exec($curl);
+//                curl_close($curl);
+//                // Декодирование полученных данных из формата JSON
+//                $reference_entity = json_decode($json_data, true);
+//                // Если есть даные
+//                if ($reference_entity)
+//                    $data['reference_entity'] = $reference_entity;
+//                else
+//                    $data['reference_entity'] = null;
+//            }
+//            // Возвращение данных
+//            $response->data = $data;
+//
+//            return $response;
+//        }
+//
+//        return false;
+//    }
+//
+//    /**
+//     * Генерация классов кандидатов для заголовка столбца при помощи сервиса STL.
+//     *
+//     * @return false|\yii\console\Response|Response
+//     */
+//    public function actionGenerateCandidateClasses()
+//    {
+//        // Установка времени выполнения скрипта в 1 час.
+//        set_time_limit(60 * 60);
+//        // Ajax-запрос
+//        if (Yii::$app->request->isAjax) {
+//            // Определение массива возвращаемых данных
+//            $data = array();
+//            // Установка формата JSON для возвращаемых данных
+//            $response = Yii::$app->response;
+//            $response->format = Response::FORMAT_JSON;
+//            // Если POST-запрос
+//            if (Yii::$app->request->isPost) {
+//                // Формирование json-запроса
+//                $column_name = Yii::$app->request->post('column_name');
+//                $file_name = Yii::$app->request->post('file_name');
+//                $request = json_encode(array(
+//                    'column_name' => $column_name,
+//                    'file_name' => $file_name
+//                ));
+//                // Отправка POST-запроса на STL
+//                $curl = curl_init();
+//                curl_setopt($curl, CURLOPT_URL, Yii::$app->params['url'] . '
+//                    /tabbyld2/get-candidate-classes');
+//                curl_setopt($curl, CURLOPT_POST, 1);
+//                curl_setopt($curl, CURLOPT_POSTFIELDS, $request);
+//                curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
+//                curl_setopt($curl, CURLOPT_RETURNTRANSFER, true );
+//                $json_data = curl_exec($curl);
+//                curl_close($curl);
+//                // Декодирование полученных данных из формата JSON
+//                $candidate_classes = json_decode($json_data, true);
+//                // Если есть даные
+//                if ($candidate_classes)
+//                    $data['candidate_classes'] = $candidate_classes;
+//                else
+//                    $data['candidate_classes'] = null;
+//            }
+//            // Возвращение данных
+//            $response->data = $data;
+//
+//            return $response;
+//        }
+//
+//        return false;
+//    }
+//
+//    /**
+//     * Выбор наиболее подходящего (референтного) класса из набора кандидатов для столбца при помощи сервиса STL.
+//     *
+//     * @return false|\yii\console\Response|Response
+//     */
+//    public function actionSelectReferenceClass()
+//    {
+//        // Установка времени выполнения скрипта в 1 час.
+//        set_time_limit(60 * 60);
+//        // Ajax-запрос
+//        if (Yii::$app->request->isAjax) {
+//            // Определение массива возвращаемых данных
+//            $data = array();
+//            // Установка формата JSON для возвращаемых данных
+//            $response = Yii::$app->response;
+//            $response->format = Response::FORMAT_JSON;
+//            // Если POST-запрос
+//            if (Yii::$app->request->isPost) {
+//                // Формирование json-запроса
+//                $column_name = Yii::$app->request->post('column_name');
+//                $class_name = Yii::$app->request->post('class_name');
+//                $file_name = Yii::$app->request->post('file_name');
+//                $request = json_encode(array(
+//                    'column_name' => $column_name,
+//                    'candidate_classes' => array(),
+//                    'class_name' => $class_name,
+//                    'file_name' => $file_name
+//                ));
+//                // Отправка POST-запроса на STL
+//                $curl = curl_init();
+//                curl_setopt($curl, CURLOPT_URL, Yii::$app->params['url'] . '/tabbyld2/get-reference-class');
+//                curl_setopt($curl, CURLOPT_POST, 1);
+//                curl_setopt($curl, CURLOPT_POSTFIELDS, $request);
+//                curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
+//                curl_setopt($curl, CURLOPT_RETURNTRANSFER, true );
+//                $json_data = curl_exec($curl);
+//                curl_close($curl);
+//                // Декодирование полученных данных из формата JSON
+//                $reference_class = json_decode($json_data, true);
+//                // Если есть даные
+//                if ($reference_class)
+//                    $data['reference_class'] = $reference_class;
+//                else
+//                    $data['reference_class'] = null;
+//            }
+//            // Возвращение данных
+//            $response->data = $data;
+//
+//            return $response;
+//        }
+//
+//        return false;
+//    }
+//
+//    /**
+//     * Аннотирование типами данных литеральных столбцов таблицы.
+//     *
+//     * @return false|\yii\console\Response|Response
+//     */
+//    public function actionAnnotateLiteralColumns()
+//    {
+//        // Установка времени выполнения скрипта в 1 час.
+//        set_time_limit(60 * 60);
+//        // Ajax-запрос
+//        if (Yii::$app->request->isAjax) {
+//            // Определение массива возвращаемых данных
+//            $data = array();
+//            // Установка формата JSON для возвращаемых данных
+//            $response = Yii::$app->response;
+//            $response->format = Response::FORMAT_JSON;
+//            // Если POST-запрос
+//            if (Yii::$app->request->isPost) {
+//                // Формирование json-запроса
+//                $recognized_data = json_decode(Yii::$app->request->post('recognized_data'), true);
+//                $file_name = Yii::$app->request->post('file_name');
+//                $request = json_encode(array(
+//                    'recognized_data' => $recognized_data,
+//                    'file_name' => $file_name
+//                ));
+//                // Отправка POST-запроса на STL
+//                $curl = curl_init();
+//                curl_setopt($curl, CURLOPT_URL, Yii::$app->params['url'] .
+//                    '/tabbyld2/get-reference-datatype');
+//                curl_setopt($curl, CURLOPT_POST, 1);
+//                curl_setopt($curl, CURLOPT_POSTFIELDS, $request);
+//                curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
+//                curl_setopt($curl, CURLOPT_RETURNTRANSFER, true );
+//                $json_data = curl_exec($curl);
+//                curl_close($curl);
+//                // Декодирование полученных данных из формата JSON
+//                $reference_datatype = json_decode($json_data, true);
+//                // Если есть даные
+//                if ($reference_datatype)
+//                    $data['reference_datatype'] = $reference_datatype;
+//                else
+//                    $data['reference_datatype'] = null;
+//            }
+//            // Возвращение данных
+//            $response->data = $data;
+//
+//            return $response;
+//        }
+//
+//        return false;
+//    }
+//
+//    /**
+//     * Генерация свойств кандидатов для пары столбцов при помощи сервиса STL.
+//     *
+//     * @return false|\yii\console\Response|Response
+//     */
+//    public function actionGenerateCandidateProperties()
+//    {
+//        // Установка времени выполнения скрипта в 1 час.
+//        set_time_limit(60 * 60);
+//        // Ajax-запрос
+//        if (Yii::$app->request->isAjax) {
+//            // Определение массива возвращаемых данных
+//            $data = array();
+//            // Установка формата JSON для возвращаемых данных
+//            $response = Yii::$app->response;
+//            $response->format = Response::FORMAT_JSON;
+//            // Если POST-запрос
+//            if (Yii::$app->request->isPost) {
+//                // Формирование json-запроса
+//                $column_name = Yii::$app->request->post('column_name');
+//                $file_name = Yii::$app->request->post('file_name');
+//                $request = json_encode(array(
+//                    'column_name' => $column_name,
+//                    'file_name' => $file_name
+//                ));
+//                // Отправка POST-запроса на STL
+//                $curl = curl_init();
+//                curl_setopt($curl, CURLOPT_URL, Yii::$app->params['url'] .
+//                    '/tabbyld2/get-candidate-properties');
+//                curl_setopt($curl, CURLOPT_POST, 1);
+//                curl_setopt($curl, CURLOPT_POSTFIELDS, $request);
+//                curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
+//                curl_setopt($curl, CURLOPT_RETURNTRANSFER, true );
+//                $json_data = curl_exec($curl);
+//                curl_close($curl);
+//                // Декодирование полученных данных из формата JSON
+//                $candidate_properties = json_decode($json_data, true);
+//                // Если есть даные
+//                if ($candidate_properties)
+//                    $data['candidate_properties'] = $candidate_properties;
+//                else
+//                    $data['candidate_properties'] = null;
+//            }
+//            // Возвращение данных
+//            $response->data = $data;
+//
+//            return $response;
+//        }
+//
+//        return false;
+//    }
+//
+//    /**
+//     * Выбор наиболее подходящего (референтного) свойства из набора кандидатов для пары столбцов при помощи сервиса STL.
+//     *
+//     * @return false|\yii\console\Response|Response
+//     */
+//    public function actionSelectReferenceProperty()
+//    {
+//        // Установка времени выполнения скрипта в 1 час.
+//        set_time_limit(60 * 60);
+//        // Ajax-запрос
+//        if (Yii::$app->request->isAjax) {
+//            // Определение массива возвращаемых данных
+//            $data = array();
+//            // Установка формата JSON для возвращаемых данных
+//            $response = Yii::$app->response;
+//            $response->format = Response::FORMAT_JSON;
+//            // Если POST-запрос
+//            if (Yii::$app->request->isPost) {
+//                // Формирование json-запроса
+//                $column_name = Yii::$app->request->post('column_name');
+//                $property_name = Yii::$app->request->post('property_name');
+//                $file_name = Yii::$app->request->post('file_name');
+//                $request = json_encode(array(
+//                    'column_name' => $column_name,
+//                    'candidate_properties' => array(),
+//                    'property_name' => $property_name,
+//                    'file_name' => $file_name
+//                ));
+//                // Отправка POST-запроса на STL
+//                $curl = curl_init();
+//                curl_setopt($curl, CURLOPT_URL, Yii::$app->params['url'] .
+//                    '/tabbyld2/get-reference-property');
+//                curl_setopt($curl, CURLOPT_POST, 1);
+//                curl_setopt($curl, CURLOPT_POSTFIELDS, $request);
+//                curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
+//                curl_setopt($curl, CURLOPT_RETURNTRANSFER, true );
+//                $json_data = curl_exec($curl);
+//                curl_close($curl);
+//                // Декодирование полученных данных из формата JSON
+//                $reference_property = json_decode($json_data, true);
+//                // Если есть даные
+//                if ($reference_property)
+//                    $data['reference_property'] = $reference_property;
+//                else
+//                    $data['reference_property'] = null;
+//            }
+//            // Возвращение данных
+//            $response->data = $data;
+//
+//            return $response;
+//        }
+//
+//        return false;
+//    }
 }

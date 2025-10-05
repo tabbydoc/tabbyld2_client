@@ -8,6 +8,7 @@ use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
 
 $this->title = Yii::t('app', 'SIGN_IN_PAGE_TITLE');
+$this->params['breadcrumbs'][] = $this->title;
 ?>
 
 <div class="site-login">
@@ -15,34 +16,29 @@ $this->title = Yii::t('app', 'SIGN_IN_PAGE_TITLE');
 
     <p><?= Yii::t('app', 'SIGN_IN_PAGE_TEXT') ?></p>
 
-    <?php $form = ActiveForm::begin([
-        'id' => 'login-form',
-        'layout' => 'horizontal',
-        'fieldConfig' => [
-            'template' => "{label}\n<div class=\"col-lg-3\">{input}</div>\n<div class=\"col-lg-8\">{error}</div>",
-            'labelOptions' => ['class' => 'col-lg-1 control-label'],
-        ],
-    ]); ?>
+    <div class="row">
+        <div class="col-lg-5">
 
-        <?= $form->field($model, 'username')->textInput(['autofocus' => true]) ?>
+            <?php $form = ActiveForm::begin(['id' => 'sign-in-form']); ?>
 
-        <?= $form->field($model, 'password')->passwordInput() ?>
+            <?= $form->field($model, 'username') ?>
 
-        <?= $form->field($model, 'rememberMe')->checkbox([
-            'template' => "<div class=\"col-lg-offset-1 col-lg-3\">{input} {label}</div>\n<div class=\"col-lg-8\">{error}</div>",
-        ]) ?>
+            <?= $form->field($model, 'password')->passwordInput() ?>
 
-        <div class="form-group">
-            <div class="col-lg-offset-1 col-lg-11">
-                <?= Html::submitButton(Yii::t('app', 'BUTTON_SIGN_IN'),
-                    ['class' => 'btn btn-primary', 'name' => 'login-button']) ?>
+            <?= $form->field($model, 'rememberMe')->checkbox() ?>
+
+            <div style="color:#999;margin:1em 0">
+                <?= Yii::t('app', 'SIGN_IN_PAGE_RESET_TEXT') . ' ' .
+                Html::a(Yii::t('app', 'SIGN_IN_PAGE_RESET_LINK'), ['password-reset-request']) ?>.
             </div>
-        </div>
 
-        <div style="color:#999;margin:1em 0">
-            <?= Yii::t('app', 'SIGN_IN_PAGE_RESET_TEXT') . ' ' .
-            Html::a(Yii::t('app', 'SIGN_IN_PAGE_RESET_LINK'), ['password-reset-request']) ?>.
-        </div>
+            <div class="form-group">
+                <?= Html::submitButton(Yii::t('app', 'BUTTON_SIGN_IN'),
+                    ['class' => 'btn btn-primary', 'name' => 'sign-in-button']) ?>
+            </div>
 
-    <?php ActiveForm::end(); ?>
+            <?php ActiveForm::end(); ?>
+
+        </div>
+    </div>
 </div>

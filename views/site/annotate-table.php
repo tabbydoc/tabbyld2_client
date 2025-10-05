@@ -102,33 +102,6 @@ $this->params['breadcrumbs'][] = $this->title;
             });
         });
 
-        // Обработка нажатия кнопки пополнения базы знаний
-        $("#augment-knowledge-base-button").click(function(e) {
-            e.preventDefault();
-            // Отображение индикатора прогресса
-            $("#overlay").show();
-            spinner.spin(target);
-            // Ajax-запрос
-            $.ajax({
-                url: "<?= Yii::$app->request->baseUrl . '/augment-knowledge-base' ?>",
-                type: "post",
-                data: "file_name=" + file_name,
-                dataType: "json",
-                success: function (data) {
-                    // Скрытие индикатора прогресса
-                    $("#overlay").hide();
-                    spinner.stop(target);
-                    alert("База знаний TALISMAN успешно пополнина!");
-                },
-                error: function () {
-                    // Скрытие индикатора прогресса
-                    $("#overlay").hide();
-                    spinner.stop(target);
-                    alert("Непредвиденная ошибка!");
-                }
-            });
-        });
-
         // Обработка нажатия ссылки заголовка столбца
         $(document).on("click", ".heading-link", function(e) {
             e.preventDefault();
@@ -412,12 +385,12 @@ $this->params['breadcrumbs'][] = $this->title;
                 'content' => $this->render('_classified_columns')
             ],
             [
-                'label' => Yii::t('app', 'ANNOTATE_TABLE_PAGE_CANDIDATE_CLASSES'),
-                'content' => $this->render('_candidate_classes')
-            ],
-            [
                 'label' => Yii::t('app', 'ANNOTATE_TABLE_PAGE_CANDIDATE_ENTITIES'),
                 'content' => $this->render('_candidate_entities')
+            ],
+            [
+                'label' => Yii::t('app', 'ANNOTATE_TABLE_PAGE_CANDIDATE_CLASSES'),
+                'content' => $this->render('_candidate_classes')
             ],
             [
                 'label' => Yii::t('app', 'ANNOTATE_TABLE_PAGE_CANDIDATE_PROPERTIES'),

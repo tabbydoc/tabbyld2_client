@@ -2,11 +2,11 @@
 
 return [
     'class' => 'yii\db\Connection',
-    'dsn' => 'pgsql:host=localhost;port=5432;dbname=stlclient;',
+    'dsn' => 'pgsql:host=localhost;port=5432;dbname=tabbyld2client;',
     'username' => 'postgres',
     'password' => 'root',
     'charset' => 'utf8',
-    'tablePrefix' => 'stlclient_',
+    'tablePrefix' => 'tabbyld_',
     'schemaMap' => [
         'pgsql'=> [
             'class'=>'yii\db\pgsql\Schema',

@@ -47,12 +47,12 @@ $dataProvider = new ArrayDataProvider([
     'headings' => $headings
 ]); ?>
 
-<?= $this->render('_modal_form_select_reference_class', [
-    'class_form' => $class_form,
-]); ?>
-
 <?= $this->render('_modal_form_select_reference_entity', [
     'entity_form' => $entity_form,
+]); ?>
+
+<?= $this->render('_modal_form_select_reference_class', [
+    'class_form' => $class_form,
 ]); ?>
 
 <?= $this->render('_modal_form_select_reference_property', [
@@ -74,18 +74,19 @@ $dataProvider = new ArrayDataProvider([
                 ]
             ]); ?>
             <?= Button::widget([
-                'label' => Yii::t('app', 'BUTTON_ANNOTATE_LITERAL_COLUMNS'),
+                'label' => Yii::t('app', 'BUTTON_ANNOTATE_CELLS'),
                 'options' => [
-                    'id' => 'annotate-literal-column-button',
+                    'id' => 'annotate-cells-button',
                     'class' => 'btn btn-primary',
                     'disabled' => 'disabled'
                 ]
             ]); ?>
             <?= Button::widget([
-                'label' => Yii::t('app', 'BUTTON_AUGMENT_KNOWLEDGE_BASE'),
+                'label' => Yii::t('app', 'BUTTON_ANNOTATE_LITERAL_COLUMNS'),
                 'options' => [
-                    'id' => 'augment-knowledge-base-button',
-                    'class' => 'btn btn-primary'
+                    'id' => 'annotate-literal-column-button',
+                    'class' => 'btn btn-primary',
+                    'disabled' => 'disabled'
                 ]
             ]); ?>
         </div>
